@@ -4,12 +4,9 @@ import datetime
 import pandas as pd
 import pytz
 import timezonefinder
-import sys
 from IPython import get_ipython
-from cryptography.fernet import Fernet
 import argparse
 import geocoder
-from geopy.geocoders import Nominatim
 
 
 
@@ -22,7 +19,6 @@ from geopy.geocoders import Nominatim
 #!pip install timezonefinder
 #!pip install sys
 #!pip install IPython
-#!pip install cryptography
 #!pip install argparse
 #!pip install geocoder
 #!pip install geopy
@@ -68,11 +64,9 @@ def get_friendly_datetime(city_name, lon, lat):
         return (f"Error: '{timezone_str}' is not a valid timezone.")
 
 
-def get_city_wheather_info(city_name,key_for_dec_api_key):
+def get_city_wheather_info(city_name):
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
-    fernet = Fernet(key_for_dec_api_key)
-    encMessage = 'gAAAAABmVI2n81eLhmqvFG-izIiw94MfubdGwK3n5INiuLyRpOtVu1rRMIt9sBKTDTRgguQI4wl8QDgtV4b-5h3teinNKGI9N02c0g6beF9vXtb9945Pk7jq5SXy7MUwg93HyamyU4zy'
-    api_key = fernet.decrypt(encMessage).decode()
+    api_key = "4473ba83f98e561df59a98f254855e99"
     complete_url = base_url + "appid=" + api_key + "&q=" + city_name + "&units=metric"
     if api_key:
         response = requests.get(complete_url)
@@ -100,20 +94,16 @@ def my_print(st1,st2):
 
 use_cli=True
 city_name=None
-key_for_dec_api_key=None
 if 'google.colab' in str(get_ipython()) or check_streamlit():
   use_cli=False
 
 if use_cli:
   parser = argparse.ArgumentParser(description='OpenWeatherMap CLI')
   parser.add_argument('--location', type=str, help='Location to get the weather for')
-  parser.add_argument('--key', type=str, help='Key for OpenWeatherMap key decryption')
   args = parser.parse_args()
 
   if args.location:
     city_name = args.location
-  if args.key:
-    key_for_dec_api_key = args.key
 
 else:
     if 'google.colab' in str(get_ipython()):
@@ -125,21 +115,15 @@ else:
         print("OpenWeatherMap - Moshe Harary")
 
 
-if not city_name and not key_for_dec_api_key:
+if not city_name:
     if 'google.colab' in str(get_ipython()):
-        key_for_dec_api_key = input("Enter Key for OpenWeatherMap key decryption (get it from mosheharary@gmail.com):")
         city_name = input("Enter city name: ")
     elif check_streamlit():
-        key_for_dec_api_key = st.text_input("Enter Key for OpenWeatherMap key decryption (get it from mosheharary@gmail.com):")
         city_name = st.selectbox("Choose City:", df['City'].tolist())
     else:
-        key_for_dec_api_key = input("Enter Key for OpenWeatherMap key decryption (get from it mosheharary@gmail.com):")
         city_name = input("Enter city name: ")
 
-if key_for_dec_api_key:
-    wheather = get_city_wheather_info(city_name,key_for_dec_api_key)
-else:
-    wheather = None
+wheather = get_city_wheather_info(city_name)
 
 if wheather:
     if wheather["cod"] != "404":

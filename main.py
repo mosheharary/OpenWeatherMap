@@ -73,7 +73,7 @@ def get_city_wheather_info(city_name,key_for_dec_api_key):
     fernet = Fernet(key_for_dec_api_key)
     encMessage = 'gAAAAABmVI2n81eLhmqvFG-izIiw94MfubdGwK3n5INiuLyRpOtVu1rRMIt9sBKTDTRgguQI4wl8QDgtV4b-5h3teinNKGI9N02c0g6beF9vXtb9945Pk7jq5SXy7MUwg93HyamyU4zy'
     api_key = fernet.decrypt(encMessage).decode()
-    complete_url = base_url + "appid=" + api_key + "&q=" + city_name
+    complete_url = base_url + "appid=" + api_key + "&q=" + city_name + "&units=metric"
     if api_key:
         response = requests.get(complete_url)
         x = response.json()
@@ -147,6 +147,7 @@ if wheather:
         date_time = get_friendly_datetime(city_name, wheather['coord']['lon'], wheather['coord']['lat'])
         y = wheather["main"]
         current_temperature = y["temp"]
+        fahrenheit_temperature = (current_temperature * 1.8) + 32
         current_pressure = y["pressure"]
         current_humidiy = y["humidity"]
         z = wheather["weather"]
@@ -157,7 +158,7 @@ if wheather:
         my_print('City : ', str(wheather["name"]))
         my_print('Country : ', str(wheather["sys"]["country"]))
         my_print('Weather Description : ', str(weather_description))
-        my_print('Temperature (in kelvin unit) : ', str(current_temperature))
+        my_print('Temperature (C/F) : ', str(current_temperature)+"/"+str(fahrenheit_temperature))
         my_print('atmospheric pressure (in hPa unit) : ', str(current_pressure))
         my_print('humidity (in percentage) : ', str(current_humidiy))
     else:

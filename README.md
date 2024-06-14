@@ -9,9 +9,8 @@ http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}
 The code can be used using the folowing methods:
 * cli with parameters:
   - location: city name
-  - api_key: private key for decrypting the OpenWeatherMap API key (get it from mosheharary@gmail.com)
 ```
-    python main.py --location "city_name" --api_key "api_key"
+    python main.py --location "city_name"
 ```
 * running as colab [notebook](https://colab.research.google.com/github/mosheharary/OpenWeatherMap/blob/main/DS17_OpenWeatherMap.ipynb):
 * run inside streamlit [app](https://openweathermap-dcaxrfco2fuy5xepj5pwxd.streamlit.app/)
